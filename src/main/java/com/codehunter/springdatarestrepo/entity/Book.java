@@ -1,14 +1,14 @@
 package com.codehunter.springdatarestrepo.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity(name = "book")
@@ -23,15 +23,17 @@ public class Book extends Auditable {
   @Column(name = "title", nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "book", orphanRemoval = true)
-  @OrderBy("name")
-  private List<Author> authors = new ArrayList<>();
+  @ManyToMany
+  @JoinTable(name = "author_books",
+      joinColumns = @JoinColumn(name = "books_id"),
+      inverseJoinColumns = @JoinColumn(name = "author_id"))
+  private Set<Author> authors = new java.util.LinkedHashSet<>();
 
-  public List<Author> getAuthors() {
+  public Set<Author> getAuthors() {
     return authors;
   }
 
-  public void setAuthors(List<Author> authors) {
+  public void setAuthors(Set<Author> authors) {
     this.authors = authors;
   }
 
